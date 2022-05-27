@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${slugBook.title}">Тут название страницы написать</title>
+    <meta name="description" content="Описание страницы">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link href="/favicon.ico" rel="shortcut icon">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/fonts.min.css?v=87821122">
+    <link rel="stylesheet" href="/assets/css/basic.min.css?v=87821122">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/assets/css/extra.min.css?v=87821122">
+<!--    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>-->
+    <script defer src="/assets/js/scripts.min.js?v=87821122"></script>
+</head>
+<body class="Site">
+<header class="Header" th:replace="~{fragments/common_header_fragment :: head(status=${status})}"></header>
+<div class="Middle">
+    <div class="wrap">
+        <main class="Middle-main">
+            <ul class="breadcrumbs"
+                th:replace="~{fragments/breadcrumb_fragment :: breadcrumps(category=${slugBook.title})}"></ul>
+            <div class="Product">
+                <div class="ProductCard">
+                    <div class="ProductCard-look">
+                        <form id="imgForm" method="POST" enctype="multipart/form-data" action="#" th:action="@{'/books/'+${slugBook.slug}+'/img/save'}">
+                            <div class="ProductCard-photo"><img th:src="${slugBook.image}" id="uploadLink" src="/assets/img/content/main/card.jpg" alt="card.jpg"/>
+                            </div>
+                            <input type="file" name="file" id="dialog" accept="image/*" style="display: none"/>
+                        </form>
+                    </div>
+                    <div class="ProductCard-desc" th:replace="~{fragments/book_description_fragment :: bookDesc(book=${slugBook},downloadError=${downloadError}, ratingTable=${ratingList}, score=${score}, ratingClass=${ratingClass}, scoreCount=${scoreCount})}"></div>
+                    <div class="fileTypePopup">
+                        <p>Ссылки для скачивания</p>
+                        <div th:each="bookFile : ${slugBook.bookFilesList}">
+                            <a href="#" th:href="@{'/books/download/' + ${bookFile.hash}}"
+                               th:text="${bookFile.fileType.getExtensionStringByTypeID(bookFile.typeId)}"></a>
+                        </div>
+                        <div th:if="${slugBook.bookFilesList.size()} == 0"  >Доступных для скачивания файлов нет.</div>
+                        <span class="fileTypePopupClose" >❎</span>
+                    </div>
+                    <div class="fileTypePopupOverlay"></div>
+                </div>
+                <div th:if="${uploadError}" >
+                    <br><span th:text="${uploadError.getLocalizedMessage()}" style="color: red"></span><br>
+                </div>
+            </div>
+            <div class="Product-comments">
+                <div class="Product-comments-header">
+                    <h3 class="Product-comments-title">Отзывы</h3>
+                    <span class="Product-comments-amount" th:text="'(' + ${bookReviewList.size()} + ')'">567 отзывов</span>
+<!--                    <span class="Rating">-->
+<!--                        <span class="Rating-stars">-->
+<!--                            <span class="Rating-star Rating-star_view" th:each="t : ${ratingArray}">-->
+<!--                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">-->
+<!--                                  <g>-->
+<!--                                    <g>-->
+<!--                                      <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>-->
+<!--                                    </g>-->
+<!--                                  </g>-->
+<!--                                </svg>-->
+<!--                            </span>-->
+<!--                        </span>-->
+<!--                    </span>-->
+                </div>
+               <div th:replace="~{fragments/book_reviews_fragment :: reviewBlock(bookReviewList = ${bookReviewList}, book=${slugBook})}"></div>
+            </div>
+        </main>
+    </div>
+</div>
+<footer class="Footer" th:replace="~{fragments/common_footer_fragment :: footer}"></footer>
+<script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</body>
+</html>

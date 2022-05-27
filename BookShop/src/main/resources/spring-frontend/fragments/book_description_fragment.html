@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="https://www.thymeleaf.org">
+<div class="ProductCard-desc" th:fragment="bookDesc" >
+    <div class="ProductCard-header">
+        <h1 class="ProductCard-title" th:text="${book.title}">Мара и морок
+        </h1>
+        <div class="ProductCard-author">
+            <span class="ProductCard-titleProp">Автор:</span>&#32;
+            <a th:each="author : ${book.authors}"  href="#" th:href="@{'/books/author/'+ ${author.id}}" th:text="${author.name}">Лия Арден</a>
+        </div>
+        <div class="ProductCard-rating"><span class="ProductCard-titleProp">Рейтинг:</span>
+            <button class="trigger trigger_dropdown" type="button">
+                <div class="Rating Rating_noStyleLink">
+                    <span class="Rating-stars" th:each="star : ${book.getBookRatingList()}">
+                        <span  th:if="${star} == 1" class="Rating-star Rating-star_view"  >
+                          <svg  xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                            <g><g><path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path></g></g>
+                          </svg>
+                        </span>
+                        <span  th:if="${star} == 0" class="Rating-star "  >
+                          <svg  xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                            <g><g><path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path></g></g>
+                          </svg>
+                        </span>
+                    </span>
+                    <span class="Rating-title" th:text="'('+${scoreCount}+')'">(567)</span>
+                </div>
+                <div class="modal modal_compression modal_dropdown">
+                    <div class="modal-window"><a class="modal-close"
+                                                 href="#"><span></span><span></span></a>
+                        <strong class="modal-title">Распределение оценок
+                        </strong>
+                        <div class="RatingGroup">
+                            <span class="Rating" th:each="pair : ${ratingTable}">
+                                <span class="Rating-stars" th:each="star : ${pair.getStarList()}">
+                                            <span  th:if="${star} == 1" class="Rating-star Rating-star_view"  >
+                                              <svg  xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                                <g><g><path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path></g></g>
+                                              </svg>
+                                            </span>
+                                            <span  th:if="${star} == 0" class="Rating-star"  >
+                                              <svg  xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                                <g><g><path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path></g></g>
+                                              </svg>
+                                            </span>
+                                </span>
+                                <span class="Rating-title" th:text="${pair.getCount()}">1</span>
+                             </span><br>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </div>
+        <div class="ProductCard-assessment">
+            <span class="ProductCard-titleProp">Оцените книгу:</span>
+            <span class="Rating Rating_input Rating" th:class="${ratingClass}" th:attr="data-bookid = ${book.id}" data-bookid="2121">
+                <span class="Rating-stars">
+                    <span class="Rating-star">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                          <g>
+                            <g>
+                              <path fill="#ffc000"
+                                    d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                            </g>
+                          </g>
+                        </svg>
+                    </span>
+                    <input th:if="${score} != 1" name="rating" type="radio" value="1"/>
+                    <input th:if="${score} == 1" name="rating" type="radio" value="1" checked/>
+                    <span class="Rating-star">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                          <g>
+                            <g>
+                              <path fill="#ffc000"
+                                    d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                            </g>
+                          </g>
+                        </svg>
+                    </span>
+                    <input th:if="${score} != 2" name="rating" type="radio" value="2"/>
+                    <input th:if="${score} == 2" name="rating" type="radio" value="2" checked/>
+
+                    <span class="Rating-star">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                          <g>
+                            <g>
+                              <path fill="#ffc000"
+                                    d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                            </g>
+                          </g>
+                        </svg>
+                    </span>
+                    <input th:if="${score} != 3" name="rating" type="radio" value="3"/>
+                    <input th:if="${score} == 3" name="rating" type="radio" value="3" checked/>
+                    <span class="Rating-star">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                          <g>
+                            <g>
+                              <path fill="#ffc000"
+                                    d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                            </g>
+                          </g>
+                        </svg>
+                    </span>
+                    <input th:if="${score} != 4" name="rating" type="radio" value="4"/>
+                    <input th:if="${score} == 4" name="rating" type="radio" value="4" checked/>
+                    <span class="Rating-star">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                          <g>
+                            <g>
+                              <path fill="#ffc000"
+                                    d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                            </g>
+                          </g>
+                        </svg>
+                    </span>
+                    <input th:if="${score} != 5" name="rating" type="radio" value="5"/>
+                    <input th:if="${score} == 5" name="rating" type="radio" value="5" checked/>
+                </span>
+            </span>
+        </div>
+        <div class="ProductCard-tags"><span class="ProductCard-titleProp" th:text="#{tags.caption}">Тэги:</span>
+            <a th:each="tag : ${book.tags}" th:href="@{'/tags/'+${tag.id}}" href="/tags/" th:text="${tag.name} + ',&#32;'">Современные </a>
+        </div>
+        <div class="ProductCard-cost"><span class="ProductCard-titleProp" th:text="#{postpond.price}">Цена:</span><span
+                class="ProductCard-priceOld" th:text="${book.price}">₽300</span><span class="ProductCard-price" th:text="${book.priceWithDiscount()}">₽180</span>
+        </div>
+    </div>
+    <div class="ProductCard-text" th:text="${book.description}">
+        <p>Таких, как я, называют Марами - отмеченными самой богиней смерти Мораной. Когда-то у меня
+            и моих шести сестер был свой путь. Тогда люди нас уважали и просили о милосердии. Они
+            приносили нам подношения и молились нам. Но 200 лет назад все изменилось, когда принц
+            Серата осмелился поднять руку на одну из нас. Я пыталась отомстить, но погибли мы все.
+            Теперь правители Аракена, погрязшие в длительной войне со своим соседом Сератом, решили
+            вернуть меня к жизни. Дать второй шанс на месть и свободу, привязав меня к тому, против
+            кого я никогда не пойду. Таких, как он, называют Морок, и их боятся абсолютно все.
+        </p>
+    </div>
+    <div th:replace="~{fragments/book_slug_buttons_fragment :: panel(book=${slugBook}, buttonCarted = ${buttonBookCartedName}, buttonPostponed = ${buttonBookPostponedName})}"></div>
+    <div th:if="${downloadError}" >
+        <br><span th:text="${downloadError.getLocalizedMessage()}" style="color: red"></span>
+    </div>
+</div>
+</html>

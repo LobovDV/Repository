@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<div class="Cards Cards_refresh" th:fragment="pool">
+    <div class="Card" th:each="book: ${booksListToView}">
+        <div class="Card-picture"><a href="#" th:href="@{'/books/' + ${book.slug}}">
+            <img th:src="${book.image}"  src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
+            <div class="Card-sale" th:if="${book.discount} != 0" th:text="${book.discount} + '% скидка'">30% скидка </div>
+            <div class="Card-ribbon" th:if="${book.isBestseller}  == 1">
+                <span class="Card-ribbonText">Бестселлер</span>
+            </div>
+        </div>
+        <div class="Card-content">
+            <strong class="Card-title"><a href="#" th:text="${book.title}">Техника</a>
+            </strong>
+            <div class="Card-description" th:text="${book.getAuthorsString()}">Кондратенко Александр Петрович
+            </div>
+            <div class="Card-cost">
+                <span class="Card-priceOld" th:if="${book.discount != 0}" th:text="'₽' + ${book.price}">₽300.00</span>
+                <span class="Card-price" th:text="'₽' + ${book.priceWithDiscount()}">₽190.00</span>
+            </div>
+        </div>
+    </div>
+<!--    -->
+<!--    -->
+    <div class="Cards-footer Cards-footer_center"><a class="btn btn_primary btn_show_more" href="#"
+                                                     th:if="${booksListToView.size()} >= 20"
+                                                     th:attr="data-refreshshow = ${category}, data-refreshquery = ${searchWordDto.example}, data-refreshid = ${refreshId}"
+                                                     data-refreshshow="search"
+                                                     data-refreshoffset="0"
+                                                     data-refreshlimit="20"
+                                                     th:text="#{button_more}">Показать еще</a>
+    </div>
+</div>
+</html>

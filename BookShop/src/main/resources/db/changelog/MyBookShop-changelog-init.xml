@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+<changeSet id="1650991337334-1"
+               author="Дмитрий (generated)">
+        <createTable tableName="author">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="1001">
+
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_author"/>
+            </column>
+            <column name="photo"
+                    type="VARCHAR(255)"/>
+            <column name="slug"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description"
+                    type="text"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-2"
+               author="Дмитрий (generated)">
+        <createTable tableName="balance_transaction">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_balance_transaction"/>
+            </column>
+            <column name="user_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0"
+                    name="value"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description"
+                    type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-3"
+               author="Дмитрий (generated)">
+        <createTable tableName="book">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="1001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book"/>
+            </column>
+            <column name="pub_date"
+                    type="DATETIME"/>
+            <column name="is_bestseller"
+                    type="SMALLINT"/>
+            <column name="slug"
+                    type="VARCHAR(255)"/>
+            <column name="title"
+                    type="VARCHAR(255)"/>
+            <column name="image"
+                    type="VARCHAR(255)"/>
+            <column name="description"
+                    type="text"/>
+            <column name="price"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0"
+                    name="discount"
+                    type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating"
+                    type="SMALLINT"/>
+            <column name="popularity"
+                    type="DOUBLE"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-4"
+               author="Дмитрий (generated)">
+        <createTable tableName="book2author">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="1001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book2author"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0"
+                    name="sort_index"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-5"
+               author="Дмитрий (generated)">
+        <createTable tableName="book2genre">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="3001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book2genre"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="genre_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-6"
+               author="Дмитрий (generated)">
+        <createTable tableName="book2user">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="1001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book2user"/>
+            </column>
+            <column name="time"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-7"
+               author="Дмитрий (generated)">
+        <createTable tableName="book2user_type">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="5">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book2user_type"/>
+            </column>
+            <column name="code"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-8"
+               author="Дмитрий (generated)">
+        <createTable tableName="book_file">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="4">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book_file"/>
+            </column>
+            <column name="hash"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-9"
+               author="Дмитрий (generated)">
+        <createTable tableName="book_file_type">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="4">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book_file_type"/>
+            </column>
+            <column name="name"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description"
+                    type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-10"
+               author="Дмитрий (generated)">
+        <createTable tableName="book_review">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="1001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book_review"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text"
+                    type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0"
+                    name="rating" 
+                    type="INT">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-11"
+               author="Дмитрий (generated)">
+        <createTable tableName="book_review_like">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="1001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book_review_like"/>
+            </column>
+            <column name="review_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value"
+                    type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-12"
+               author="Дмитрий (generated)">
+        <createTable tableName="book_score">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="3001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book_score"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="score"
+                    type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-13"
+               author="Дмитрий (generated)">
+        <createTable tableName="document">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_document"/>
+            </column>
+            <column defaultValueNumeric="0"
+                    name="sort_index"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text"
+                    type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-14"
+               author="Дмитрий (generated)">
+        <createTable tableName="faq">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_faq"/>
+            </column>
+            <column defaultValueNumeric="0"
+                    name="sort_index"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answer"
+                    type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-15"
+               author="Дмитрий (generated)">
+        <createTable tableName="file_download">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_file_download"/>
+            </column>
+            <column name="user_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1"
+                    name="count"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-16"
+               author="Дмитрий (generated)">
+        <createTable tableName="genre">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="51">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_genre"/>
+            </column>
+            <column name="parent_id"
+                    type="INT"/>
+            <column name="slug"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0"
+		    name="count_book"
+                    type="INT">
+		<constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-17"
+               author="Дмитрий (generated)">
+        <createTable tableName="message">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_message"/>
+            </column>
+            <column name="time"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id"
+                    type="INT"/>
+            <column name="email"
+                    type="VARCHAR(255)"/>
+            <column name="name"
+                    type="VARCHAR(255)"/>
+            <column name="subject"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text"
+                    type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-18"
+               author="Дмитрий (generated)">
+        <createTable tableName="user_contact">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_user_contact"/>
+            </column>
+            <column name="user_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type"
+                    type="INT"/>
+            <column name="approved"
+                    type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code"
+                    type="VARCHAR(255)">
+            </column>
+            <column name="code_trails"
+                    type="INT"/>
+            <column name="code_time"
+                    type="TIMESTAMP"/>
+            <column name="contact"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-19"
+               author="Дмитрий (generated)">
+        <createTable tableName="users">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT"
+                    startWith="1001">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_users"/>
+
+            </column>
+            <column name="hash"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reg_time"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code"
+                    type="VARCHAR(255)">
+            </column>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="1650991337334-20" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2genre" constraintName="fk_boo_on_book"
+                                 referencedColumnNames="id" referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-21" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="genre_id" baseTableName="book2genre"
+                                 constraintName="fk_boo_on_genre_entity" referencedColumnNames="id"
+                                 referencedTableName="genre"/>
+    </changeSet>
+    <changeSet id="1650991337334-22" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2author" constraintName="fk_boo_on_book"
+                                 referencedColumnNames="id" referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-23" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="book2author"
+                                 constraintName="fk_boo_on_author_entity" referencedColumnNames="id"
+                                 referencedTableName="author"/>
+    </changeSet>
+    <changeSet id="1650991337334-24" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2user" constraintName="fk_boo_on_book"
+                                 referencedColumnNames="id" referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-25" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="book2user"
+                                 constraintName="fk_boo_on_user_entity" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1650991337334-26" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_contact"
+                                 constraintName="fk_user_on_user_contact" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1650991337334-27" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="review_id" baseTableName="book_review_like"
+                                 constraintName="fk_review_on_review_likr" referencedColumnNames="id"
+                                 referencedTableName="book_review"/>
+    </changeSet>
+
+    <changeSet id="1650991337334-28" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book_review"
+                                 constraintName="fk_review_on_book" referencedColumnNames="id"
+                                 referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-29" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="book_review"
+                                 constraintName="fk_review_on_users" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1650991337334-30" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="book2user"
+                                 constraintName="fk_book2user_on_types" referencedColumnNames="id"
+                                 referencedTableName="book2user_type"/>
+    </changeSet>
+    <changeSet id="1650991337334-31" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="balance_transaction"
+                                 constraintName="fk_transaction_on_book" referencedColumnNames="id"
+                                 referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-32" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="balance_transaction"
+                                 constraintName="fk_transaction_on_users" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="1650991337334-33" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="book_file"
+                                 constraintName="fk_files_on_type" referencedColumnNames="id"
+                                 referencedTableName="book_file_type"/>
+    </changeSet>
+
+    <changeSet id="1650991337334-34" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="file_download"
+                                 constraintName="fk_review_on_book" referencedColumnNames="id"
+                                 referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-35" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="file_download"
+                                 constraintName="fk_review_on_users" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1650991337334-36" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="message"
+                                 constraintName="fk_message_on_users" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="1650991337334-37" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book_score"
+                                 constraintName="fk_score_on_book" referencedColumnNames="id"
+                                 referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-38" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="book_score"
+                                 constraintName="fk_score_on_users" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1650991337334-39"
+               author="Дмитрий (generated)">
+        <createTable tableName="book2tag">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_book2tag"/>
+            </column>
+            <column name="book_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650991337334-40"
+               author="Дмитрий (generated)">
+        <createTable tableName="tag">
+            <column autoIncrement="true"
+                    name="id"
+                    type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_tag"/>
+            </column>
+            <column name="name"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0"
+                    name="count_book"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type"
+                    type="INT"/>
+        </createTable>
+    </changeSet> 
+    <changeSet id="1650991337334-41" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2tag" constraintName="fk_boo_on_tag"
+                                 referencedColumnNames="id" referencedTableName="book"/>
+    </changeSet>
+    <changeSet id="1650991337334-42" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="book2tag"
+                                 constraintName="fk_tag_on_book" referencedColumnNames="id"
+                                 referencedTableName="tag"/>
+    </changeSet>
+
+    <changeSet id="1650991337334-43" author="Дмитрий (generated)">
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book_file"
+                                 constraintName="fk_book_on_files" referencedColumnNames="id"
+                                 referencedTableName="book"/>
+    </changeSet>
+
+
+
+</databaseChangeLog>
