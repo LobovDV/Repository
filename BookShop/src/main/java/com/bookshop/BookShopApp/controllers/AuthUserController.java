@@ -147,16 +147,22 @@ public class AuthUserController {
     @ResponseBody
     public HashMap<String, Object>  handleLogin(@RequestBody ContactConfirmation contactConfirmation, HttpServletResponse httpServletResponse) {
         HashMap<String, Object> loginResponse = userRegister.jwtLogin(contactConfirmation);
-        Cookie cookie = new Cookie("token", (String) loginResponse.get("result"));
-        httpServletResponse.addCookie(cookie);
+        String result = (String) loginResponse.get("result");
+        if (!result.equals("error")) {
+            Cookie cookie = new Cookie("token", result);
+            httpServletResponse.addCookie(cookie);
+        } else {
+            loginResponse.replace("result", false);
+            loginResponse.put("error", "Ошибка авторизации");
+        }
         return loginResponse;
-//        return userRegister.login(contactConfirmation);
     }
 
 
     @GetMapping("/my")
     public String handleMy(Model model) {
         int userId = userRegister.getCurrentUser().getId();
+        userService.updateUserLoginVerificationCode("", userId);
         List<Book> currentUserBooks = bookService.getBooksByUserIdAndStatus(userId, "PAID");
         model.addAttribute("myBooks", currentUserBooks);
         return "my";

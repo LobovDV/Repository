@@ -3,6 +3,7 @@ package com.bookshop.BookShopApp.security;
 import com.bookshop.BookShopApp.services.JWTUtil;
 import com.bookshop.BookShopApp.structure.user.BookstoreUserDetails;
 import com.bookshop.BookShopApp.services.BookstoreUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -21,10 +22,13 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final JWTUtil jwtUtil;
+    private BlackListToken blackListToken;
 
-    public JWTRequestFilter(BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil) {
+    @Autowired
+    public JWTRequestFilter(BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil, BlackListToken blackListToken) {
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
         this.jwtUtil = jwtUtil;
+        this.blackListToken = blackListToken;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(username);
-                    if (jwtUtil.validateToken(token, userDetails)) {
+                    if ((jwtUtil.validateToken(token, userDetails)) & (!blackListToken.isTokenInBlackList(token))) {
                         UsernamePasswordAuthenticationToken authenticationToken =
                                 new UsernamePasswordAuthenticationToken(
                                         userDetails, null, userDetails.getAuthorities());

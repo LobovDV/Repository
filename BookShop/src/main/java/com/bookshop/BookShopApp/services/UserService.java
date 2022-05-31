@@ -4,12 +4,10 @@ import com.bookshop.BookShopApp.data.*;
 import com.bookshop.BookShopApp.structure.enums.ContactType;
 import com.bookshop.BookShopApp.structure.user.User;
 import com.bookshop.BookShopApp.structure.user.UserContact;
-import com.bookshop.BookShopApp.data.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,32 +67,9 @@ public class UserService {
         user.setBalance(0);
         user.setRegTime(LocalDateTime.now());
         user.setName(name);
-        user.setHash(createMD5Hash(name + LocalDateTime.now()));
+        user.setHash(userRegister.createMD5Hash(name + LocalDateTime.now()));
         userRepository.save(user);
         return user.getId();
-    }
-
-
-    public String createMD5Hash(String input)  {
-
-        try {
-            String hashtext = null;
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            // Compute message digest of the input
-            byte[] messageDigest = md.digest(input.getBytes());
-            hashtext = convertToHex(messageDigest);
-            return hashtext;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String convertToHex(byte[] messageDigest) {
-        StringBuilder builder = new StringBuilder();
-        for (Byte b : messageDigest) {
-            builder.append(String.format("%02x", b & 0xff));
-        }
-        return builder.toString();
     }
 
     public void removeAnonymousUsersMoreThanThirtyDays() {
