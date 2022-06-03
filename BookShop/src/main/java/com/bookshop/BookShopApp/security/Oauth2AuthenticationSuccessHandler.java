@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,7 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 
-        DefaultOidcUser oauthUser = (DefaultOidcUser) authentication.getPrincipal();
+        DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
