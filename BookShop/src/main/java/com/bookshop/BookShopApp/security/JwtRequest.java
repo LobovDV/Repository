@@ -1,6 +1,6 @@
 package com.bookshop.BookShopApp.security;
 
-public class ContactConfirmation {
+public class JwtRequest {
 
     private String contact;
     private String code;

@@ -4,11 +4,11 @@ import com.bookshop.BookShopApp.data.*;
 import com.bookshop.BookShopApp.structure.enums.ContactType;
 import com.bookshop.BookShopApp.structure.user.User;
 import com.bookshop.BookShopApp.structure.user.UserContact;
+import com.bookshop.BookShopApp.util.AdditionalMethod;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRegister userRegister;
 
-    public UserService(UserRepository userRepository, UserContactRepository userContactRepository, Book2UserRepository book2UserRepository, BookScoreRepository bookScoreRepository,
+    public UserService(com.bookshop.BookShopApp.data.UserRepository userRepository, UserContactRepository userContactRepository, Book2UserRepository book2UserRepository, BookScoreRepository bookScoreRepository,
                        BookReviewRepository bookReviewRepository, BookReviewLikeRepository bookReviewLikeRepository, MessageRepository messageRepository, PasswordEncoder passwordEncoder,
                        UserRegister userRegister) {
         this.userRepository = userRepository;
@@ -44,14 +44,6 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
-    public Integer getAnonymousUserId(String bookShop) throws NoSuchAlgorithmException {
-        int userId = getUserIdFromCookie(bookShop);
-        if (userId == 0) {
-            userId =  newUser("Anonymous");
-        }
-        return userId;
-    }
-
     public Integer getUserIdFromCookie(String bookShop) {
         int userId = 0;
         if ((bookShop != null) & (bookShop !="")){
@@ -62,12 +54,13 @@ public class UserService {
         return userId;
     }
 
-    public Integer newUser (String name) throws NoSuchAlgorithmException {
+    public Integer newUser (String name)  {
         User user = new User();
         user.setBalance(0);
         user.setRegTime(LocalDateTime.now());
         user.setName(name);
-        user.setHash(userRegister.createMD5Hash(name + LocalDateTime.now()));
+        user.setHash(AdditionalMethod.createMD5Hash(name + LocalDateTime.now()));
+        user.setRoles("USER");
         userRepository.save(user);
         return user.getId();
     }
@@ -92,7 +85,6 @@ public class UserService {
         userContact.setContact(contact);
         userContact.setType(type);
         userContact.setApproved((short) 1);
-        userContact.setApproved((short) 0);
         userContact.setCode(code);
         userContact.setCodeTime(codeTime);
         userContact.setCodeTrails(0);
@@ -135,5 +127,9 @@ public class UserService {
             userId = getUserIdFromCookie(bookShop);
         }
         return userId;
+    }
+
+    public User getBookstoreUserByContact(String contact, int type) {
+        return userRepository.findBookstoreUserByContact(contact, type);
     }
 }

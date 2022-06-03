@@ -12,20 +12,32 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @ControllerAdvice(annotations = Controller.class)
-public class ControllerAnnotation {
+public class GlobalAnnotationController {
 
     private final BookService bookService;
     private final UserService userService;
     private final UserRegister userRegister;
 
     @Autowired
-    public ControllerAnnotation(BookService bookService, UserService userService, UserRegister userRegister) {
+    public GlobalAnnotationController(BookService bookService, UserService userService, UserRegister userRegister) {
         this.bookService = bookService;
         this.userService = userService;
         this.userRegister = userRegister;
+    }
+
+    @ModelAttribute(value = "cookie")
+    public void setCookie(@CookieValue(value = "bookShop", required = false) String bookShop, HttpServletResponse response) {
+        if (bookShop == null) {
+            int userId = userService.newUser("Anonymous");
+            Cookie cookie = new Cookie("bookShop", String.valueOf(userId));
+            cookie.setPath("/");
+            cookie.setMaxAge(2592000);
+            response.addCookie(cookie);
+        }
     }
 
     @ModelAttribute("searchWordDto")

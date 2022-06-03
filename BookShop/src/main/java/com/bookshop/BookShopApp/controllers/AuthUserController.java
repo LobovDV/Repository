@@ -1,6 +1,7 @@
 package com.bookshop.BookShopApp.controllers;
 
-import com.bookshop.BookShopApp.security.ContactConfirmation;
+import com.bookshop.BookShopApp.security.JwtRequest;
+import com.bookshop.BookShopApp.security.JwtResponse;
 import com.bookshop.BookShopApp.security.RegistrationForm;
 import com.bookshop.BookShopApp.services.UserRegister;
 import com.bookshop.BookShopApp.services.BookService;
@@ -11,15 +12,12 @@ import com.bookshop.BookShopApp.structure.user.User;
 import com.bookshop.BookShopApp.structure.user.UserContact;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -55,23 +53,15 @@ public class AuthUserController {
     @ApiOperation("operation confirmation user phone or e-mail, parameters contact - phone or e-mail")
     @PostMapping("/api/requestContactConfirmation")
     @ResponseBody
-    public HashMap<String, Object> handleRequestContactConfirmation(@RequestBody ContactConfirmation contactConfirmation, @CookieValue(name = "bookShop",  required = false) String bookShop) throws NoSuchAlgorithmException {
+    public HashMap<String, Object> handleRequestContactConfirmation(@RequestBody JwtRequest JWTRequest, @CookieValue(name = "bookShop",  required = false) String bookShop)  {
         HashMap<String, Object> response = new HashMap<>();
         response.put("result", true);
         String code = "123 123";
-
         int userId = userService.getUserIdFromCookie(bookShop);
-        if (userId == 0) {
-            userId = userService.newUser("Anonymous");
-            Cookie cookie = new Cookie("bookShop", String.valueOf(userId));
-            cookie.setPath("/");
-            cookie.setMaxAge(2592000);
-        }
+        ContactType contactType = JWTRequest.getContact().contains("@") ? ContactType.EMAIL : ContactType.PHONE;
+        UserContact userContact = userService.getUserContactByContact(JWTRequest.getContact());
 
-        ContactType contactType = contactConfirmation.getContact().contains("@") ? ContactType.EMAIL : ContactType.PHONE;
-        UserContact userContact = userService.getUserContactByContact(contactConfirmation.getContact());
-
-        if (contactConfirmation.getCode().equals("login")) {
+        if (JWTRequest.getCode().equals("login")) {
             if (userContact != null) {
                 userService.updateUserLoginVerificationCode(code, userContact.getUserId());
                 return response;
@@ -81,7 +71,7 @@ public class AuthUserController {
             }
         }
 
-        if (contactConfirmation.getCode().equals("registration")) {
+        if (JWTRequest.getCode().equals("registration")) {
             if (userContact != null) {
                 if (userContact.getUserId() == userId) {
                     if (userContact.getApproved() != 1) {
@@ -101,7 +91,7 @@ public class AuthUserController {
                     cookie.setPath("/");
                     cookie.setMaxAge(2592000);
                 }
-                userService.addUserContact(userId, contactConfirmation.getContact(), contactType, code, LocalDateTime.now());
+                userService.addUserContact(userId, JWTRequest.getContact(), contactType, code, LocalDateTime.now());
             }
         }
         return response;
@@ -110,13 +100,13 @@ public class AuthUserController {
     @ApiOperation("approve user contact: phone or e-mail, parameters contact and code")
     @PostMapping("/api/approveContact")
     @ResponseBody
-    public HashMap<String, Object> handleApproveContact(@RequestBody ContactConfirmation contactConfirmation, @CookieValue(name = "bookShop", required = false) String bookShop) {
+    public HashMap<String, Object> handleApproveContact(@RequestBody JwtRequest JWTRequest, @CookieValue(name = "bookShop", required = false) String bookShop) {
         int userId = Integer.parseInt(bookShop);
         HashMap<String, Object> response = new HashMap<>();
         response.put("result", true);
-        UserContact userContact = userService.getUserContactByContact(contactConfirmation.getContact());
+        UserContact userContact = userService.getUserContactByContact(JWTRequest.getContact());
         if (userContact != null) {
-            if (userContact.getCode().equals(contactConfirmation.getCode())) {
+            if (userContact.getCode().equals(JWTRequest.getCode())) {
                 userService.updateUserContactApproved(1, userContact.getId());
             } else {
                 response.put("error", "Код не верен.");
@@ -145,19 +135,22 @@ public class AuthUserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public HashMap<String, Object>  handleLogin(@RequestBody ContactConfirmation contactConfirmation, HttpServletResponse httpServletResponse) {
-        HashMap<String, Object> loginResponse = userRegister.jwtLogin(contactConfirmation);
-        String result = (String) loginResponse.get("result");
+    public JwtResponse  handleLogin(@RequestBody JwtRequest JWTRequest, HttpServletResponse httpServletResponse) {
+        JwtResponse loginResponse = userRegister.jwtLogin(JWTRequest);
+        String result = loginResponse.getResult();
         if (!result.equals("error")) {
-            Cookie cookie = new Cookie("token", result);
+            Cookie cookie = new Cookie("token", loginResponse.getAccessToken());
+            cookie.setPath("/");
+            cookie.setMaxAge(2592000);
+            Cookie cookieRefresh = new Cookie("refresh", loginResponse.getRefreshToken());
+            cookieRefresh.setPath("/");
+            cookieRefresh.setMaxAge(2592000);
+
             httpServletResponse.addCookie(cookie);
-        } else {
-            loginResponse.replace("result", false);
-            loginResponse.put("error", "Ошибка авторизации");
+            httpServletResponse.addCookie(cookieRefresh);
         }
         return loginResponse;
     }
-
 
     @GetMapping("/my")
     public String handleMy(Model model) {
@@ -195,18 +188,4 @@ public class AuthUserController {
         return "profile";
     }
 
-//    @GetMapping("/logout")
-//    public String handleLogout(HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        SecurityContextHolder.clearContext();
-//        if (session != null) {
-//            session.invalidate();
-//        }
-//        for (Cookie cookie : request.getCookies()) {
-//            if (!cookie.getName().equals("bookShop")) {
-//                cookie.setMaxAge(0);
-//            }
-//        }
-//        return "redirect:/";
-//    }
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="authorized">
+<!--    <strong class="Comments-title">Написать отзыв</strong>-->
+    <div class="Comments-addComment">
+        <form class="form" action="#" method="post" data-bookid="1111" th:attr="data-bookid = ${book.id}">
+            <div class="form-group">
+                <textarea class="form-textarea Comments-review" name="review" id="review" placeholder="Текст отзыва" data-validate="require"></textarea>
+            </div>
+            <div class="form-group Comments-sendReview">
+                <button class="btn btn_warning" type="submit">Отправить отзыв
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:fragment="unauthorized">
+    <div class="Comments-addComment">
+        <strong >Отзывы могут оставлять только авторизованные пользователи</strong>
+        <div class="form-group">
+            <a class="Login-reg" th:href="@{/signin}" href="/signin.html">Войти</a>
+            <a class="Login-reg" href="/signup.html" th:href="@{/signup}" >Зарегистрироваться</a>
+            <div><br></div>
+        </div>
+    </div>
+</div>
+
+</html>

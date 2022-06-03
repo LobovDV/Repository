@@ -3,21 +3,7 @@
 <div th:fragment="reviewBlock">
     <div class="Comments">
         <strong class="Comments-title">Написать отзыв</strong>
-        <div class="Comments-addComment">
-            <form class="form" action="#" method="post" data-bookid="1111" th:attr="data-bookid = ${book.id}">
-                <div class="form-group">
-                    <textarea class="form-textarea Comments-review" name="review" id="review" placeholder="Текст отзыва" data-validate="require"></textarea>
-                </div>
-                <div class="form-group Comments-sendReview">
-                    <button class="btn btn_warning" type="submit">Отправить отзыв
-                    </button>
-                </div>
-            </form>
-        </div>
-<!--        <div class="Product-comments-header">-->
-<!--            <h3 class="Product-comments-title">Отзывы</h3>-->
-<!--            <span class="Product-comments-amount" th:text="'(' + ${bookReviewList.size()} + ')'">567 отзывов</span>-->
-<!--        </div>-->
+        <div class="Comments-addComment" th:replace="~{fragments/book_new_review_fragment :: ${status}}"></div>
         <div class="Comment" th:each="review : ${bookReviewList}">
             <div class="Comment-column Comment-column_pict">
                 <div class="Comment-avatar">

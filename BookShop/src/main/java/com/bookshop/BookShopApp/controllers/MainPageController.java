@@ -3,7 +3,6 @@ package com.bookshop.BookShopApp.controllers;
 import com.bookshop.BookShopApp.services.*;
 import com.bookshop.BookShopApp.data.SearchWordDto;
 import com.bookshop.BookShopApp.errors.EmptySearchException;
-import com.bookshop.BookShopApp.services.*;
 import com.bookshop.BookShopApp.structure.author.Author;
 import com.bookshop.BookShopApp.structure.book.Book;
 import com.bookshop.BookShopApp.structure.tag.Tag;
@@ -12,9 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.Cookie;
+
 import javax.servlet.http.HttpServletResponse;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 
@@ -77,22 +75,12 @@ public class MainPageController {
     }
 
     @GetMapping("/")
-    public String mainPage(@CookieValue(value = "bookShop", required = false) String bookShop, HttpServletResponse response) throws NoSuchAlgorithmException {
+    public String mainPage(@CookieValue(value = "bookShop", required = false) String bookShop, HttpServletResponse response) {
 
         userService.removeAnonymousUsersMoreThanThirtyDays();
         genreService.setAllGenresBooksCount();
         tagService.setAllTagsBooksCount();
         bookService.setAllReviewRatings();
-
-        Integer userId = 0;
-        if (userRegister.getAuthenticationStatus()) {
-            userId = userRegister.getCurrentUser().getId();
-        } else {
-            userId = userService.getAnonymousUserId(bookShop);
-            Cookie cookie = new Cookie("bookShop", String.valueOf(userId));
-            cookie.setPath("/");
-            cookie.setMaxAge(2592000);
-        }
         return "index";
     }
 

@@ -6,7 +6,6 @@ import com.bookshop.BookShopApp.structure.book.file.BookFile;
 import com.bookshop.BookShopApp.structure.book.review.BookReview;
 import com.bookshop.BookShopApp.structure.book.review.BookReviewLike;
 import com.bookshop.BookShopApp.structure.book.review.BookScore;
-import com.bookshop.BookShopApp.data.*;
 import com.bookshop.BookShopApp.structure.book.Book;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.security.NoSuchAlgorithmException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -160,7 +160,7 @@ public class BooksRestApiController {
     @ApiOperation("operation to change book status, parameters bookIds Integer[], String status")
     @ResponseBody
     public HashMap<String, Object> handleChangeBookStatus(@RequestParam(value="booksIds[]") Integer[] booksIds, String status, @CookieValue(name = "bookShop",
-            required = false) String bookShop ) throws NoSuchAlgorithmException {
+            required = false) String bookShop ) {
         String errorMessage = "";
 
         HashMap<String, Object> result = new HashMap<>();
@@ -190,7 +190,7 @@ public class BooksRestApiController {
     @PostMapping("/rateBook")
     @ApiOperation("operation to change book rating, parameters bookId Integer, value short")
     @ResponseBody
-    public HashMap<String, Object> handleAddBookRatingScore(Integer bookId, short value, @CookieValue(name = "bookShop", required = false) String bookShop ) throws NoSuchAlgorithmException {
+    public HashMap<String, Object> handleAddBookRatingScore(Integer bookId, short value, @CookieValue(name = "bookShop", required = false) String bookShop ) {
         String errorMessage = "";
         HashMap<String, Object> result = new HashMap<>();
         result.put("result", true);
@@ -213,7 +213,7 @@ public class BooksRestApiController {
     @PostMapping("/bookReview")
     @ApiOperation("operation to add book review, parameters bookId Integer, text String")
     @ResponseBody
-    public HashMap<String, Object> handleAddBookReview(Integer bookId, String text, @CookieValue(name = "bookShop", required = false) String bookShop ) throws NoSuchAlgorithmException {
+    public HashMap<String, Object> handleAddBookReview(Integer bookId, String text, @CookieValue(name = "bookShop", required = false) String bookShop ) {
         String errorMessage = "";
         HashMap<String, Object> result = new HashMap<>();
         result.put("result", false);
@@ -243,7 +243,7 @@ public class BooksRestApiController {
     @PostMapping("/rateBookReview")
     @ApiOperation("operation to add book review like/dislike, parameters reviewId Integer, value short (1/-1)")
     @ResponseBody
-    public HashMap<String, Object> handleAddBookReviewLike(Integer reviewId, short value, @CookieValue(name = "bookShop", required = false) String bookShop ) throws NoSuchAlgorithmException {
+    public HashMap<String, Object> handleAddBookReviewLike(Integer reviewId, short value, @CookieValue(name = "bookShop", required = false) String bookShop ) {
         String errorMessage = "";
         HashMap<String, Object> result = new HashMap<>();
         result.put("result", false);
@@ -288,31 +288,6 @@ public class BooksRestApiController {
     }
 
 
-
-//    @GetMapping("/books/by-price-range")
-//    @ApiOperation("get books by price range from min price to max price")
-//    public ResponseEntity<List<Book>> priceRangeBookss(@RequestParam("min")Integer min, @RequestParam("max")Integer max){
-//        return ResponseEntity.ok(bookService.getBooksWithPriceBetween(min, max));
-//    }
-//
-//    @GetMapping("/books/with-max-discount")
-//    @ApiOperation("get list of book with max price")
-//    public ResponseEntity<List<Book>> maxPriceBooks(){
-//        return ResponseEntity.ok(bookService.getBooksWithMaxPrice());
-//    }
-//
-//    @GetMapping("/books/bestsellers")
-//    @ApiOperation("get bestseller book (which is_bestseller = 1)")
-//    public ResponseEntity<List<Book>> bestSellerBooks(){
-//        return ResponseEntity.ok(bookService.getBestsellers());
-//    }
-
-//    @GetMapping("/books/by-author")
-//    @ApiOperation("operation to get book list of bookshop by passed author")
-//    public ResponseEntity<List<Book>> booksByAuthor(@RequestParam("author") Author author){
-//        return ResponseEntity.ok(bookService.getBooksByAuthor(author));
-//    }
-//
 
 
 

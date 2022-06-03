@@ -1,6 +1,6 @@
 package com.bookshop.BookShopApp.security;
 
-import com.bookshop.BookShopApp.services.JWTUtil;
+import com.bookshop.BookShopApp.services.JwtProvider;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,32 +10,20 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class BlackListToken {
+public class JwtBlackListToken {
 
-//    private final ExpiringMap expiringMap;
-    private final ExpiringMap<String, Date> expiringMap = ExpiringMap.builder().variableExpiration().build();
-    private final JWTUtil jwtUtil;
+    private final ExpiringMap<String, Date> expiringMap = ExpiringMap.builder().variableExpiration().maxSize(1000).build();
+    private final JwtProvider jwtProvider;
 
     @Autowired
-    public BlackListToken(JWTUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-//        this.expiringMap = ExpiringMap.builder()
-//                .variableExpiration()
-//                .maxSize(1000)
-//                .build();
-
+    public JwtBlackListToken(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
     }
 
-    public void addTokenToBlackList(String token) {
-//        String token = event.getToken();
-//        if (expiringMap.containsKey(token)) {
-//
-//
-//        } else
+    public void addTokenToBlackList(String token, int type) {
         if (!expiringMap.containsKey(token)){
-            Date tokenExpiryDate = jwtUtil.extractExpiration(token);
+            Date tokenExpiryDate = type ==1 ? jwtProvider.extractAccessExpiration(token) : jwtProvider.extractRefreshExpiration(token);
             long ttlForToken = getTTLForToken(tokenExpiryDate);
-
             expiringMap.put(token, tokenExpiryDate, ttlForToken, TimeUnit.SECONDS);
         }
     }
@@ -43,14 +31,11 @@ public class BlackListToken {
     public boolean isTokenInBlackList(String token) {
         return expiringMap.containsKey(token);
     }
-//
-//    public OnUserLogoutSuccessEvent getLogoutEventForToken(String token) {
-//        return expiringMap.get(token);
-//    }
 
     private long getTTLForToken(Date date) {
         long secondAtExpiry = date.toInstant().getEpochSecond();
         long secondAtLogout = Instant.now().getEpochSecond();
         return Math.max(0, secondAtExpiry - secondAtLogout);
     }
+
 }

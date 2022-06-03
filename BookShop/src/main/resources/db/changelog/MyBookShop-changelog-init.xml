@@ -540,6 +540,10 @@
             <column name="code"
                     type="VARCHAR(255)">
             </column>
+            <column name="roles"
+                    type="VARCHAR(255)">
+            </column>
+
         </createTable>
 
     </changeSet>

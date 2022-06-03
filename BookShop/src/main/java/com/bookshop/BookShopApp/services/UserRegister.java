@@ -1,11 +1,14 @@
 package com.bookshop.BookShopApp.services;
 
 import com.bookshop.BookShopApp.data.UserContactRepository;
-import com.bookshop.BookShopApp.security.ContactConfirmation;
+import com.bookshop.BookShopApp.security.JwtRefreshStorage;
+import com.bookshop.BookShopApp.security.JwtRequest;
+import com.bookshop.BookShopApp.security.JwtResponse;
 import com.bookshop.BookShopApp.security.RegistrationForm;
 import com.bookshop.BookShopApp.structure.user.BookstoreUserDetails;
 import com.bookshop.BookShopApp.data.UserRepository;
 import com.bookshop.BookShopApp.structure.user.User;
+import com.bookshop.BookShopApp.util.AdditionalMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,35 +18,52 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
 @Service
+@Transactional
 public class UserRegister {
 
+    private final JwtRefreshStorage jwtRefreshStorage;
     private final UserRepository userRepository;
     private final UserContactRepository userContactRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
-    private final JWTUtil jwtUtil;
+    private final JwtProvider jwtProvider;
 
 
     @Autowired
     public UserRegister(UserRepository userRepository, UserContactRepository userContactRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-                        BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil ) {
+                        BookstoreUserDetailsService bookstoreUserDetailsService, JwtProvider jwtProvider, JwtRefreshStorage jwtRefreshStorage) {
         this.userRepository = userRepository;
         this.userContactRepository = userContactRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
-        this.jwtUtil = jwtUtil;
+        this.jwtProvider = jwtProvider;
+        this.jwtRefreshStorage = jwtRefreshStorage;
     }
 
-    public String registerNewUser(RegistrationForm registrationForm, String bookShop) throws NoSuchAlgorithmException {
+    public JwtResponse jwtLogin(JwtRequest JWTRequest) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(JWTRequest.getContact(), JWTRequest.getCode()));
+            BookstoreUserDetails userDetails =
+                    (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(JWTRequest.getContact());
+            int type = JWTRequest.getContact().contains("@") ? 1 : 0;
+            User user = userRepository.findBookstoreUserByContact(JWTRequest.getContact(), type);
+            final String accessToken = jwtProvider.generateAccessToken(user, userDetails);
+            final String refreshToken = jwtProvider.generateRefreshToken(userDetails);
+            jwtRefreshStorage.addTokenToStorage(refreshToken, userDetails.getUsername());
+            return new JwtResponse(accessToken, accessToken, refreshToken, "");
+        } catch (AuthenticationException e) {
+            return new JwtResponse("error", "", "", "Ошибка авторизации");
+        }
+    }
+
+    public String registerNewUser(RegistrationForm registrationForm, String bookShop) {
         int userFromCookieId = 0;
         if ((bookShop != null) & (bookShop != "")) {
             userFromCookieId = Integer.parseInt(bookShop);
@@ -53,29 +73,13 @@ public class UserRegister {
         user.setBalance(0);
         user.setRegTime(LocalDateTime.now());
         user.setName(registrationForm.getName());
-        user.setHash(createMD5Hash(registrationForm.getName() + LocalDateTime.now()));
+        user.setHash(AdditionalMethod.createMD5Hash(registrationForm.getName() + LocalDateTime.now()));
+        user.setRoles("USER");
         userRepository.save(user);
         int userId = user.getId();
 
         userContactRepository.modifyUserContactUserId(userId, userFromCookieId);
         return "";
-    }
-
-    public HashMap<String, Object> jwtLogin(ContactConfirmation contactConfirmation) {
-        HashMap<String, Object> response = new HashMap<>();
-        response.put("result",  false);
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(contactConfirmation.getContact(), contactConfirmation.getCode()));
-            BookstoreUserDetails userDetails =
-                    (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(contactConfirmation.getContact());
-
-            String jwtToken = jwtUtil.generateToken(userDetails);
-            response.put("result", jwtToken);
-//            System.out.println(jwtUtil.extractExpiration(jwtToken));
-        } catch (AuthenticationException e) {
-            response.put("result", "error");
-        }
-        return response;
     }
 
 
@@ -89,25 +93,5 @@ public class UserRegister {
         return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
-    public String createMD5Hash(String input)  {
 
-        try {
-            String hashtext = null;
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            // Compute message digest of the input
-            byte[] messageDigest = md.digest(input.getBytes());
-            hashtext = convertToHex(messageDigest);
-            return hashtext;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String convertToHex(byte[] messageDigest) {
-        StringBuilder builder = new StringBuilder();
-        for (Byte b : messageDigest) {
-            builder.append(String.format("%02x", b & 0xff));
-        }
-        return builder.toString();
-    }
 }

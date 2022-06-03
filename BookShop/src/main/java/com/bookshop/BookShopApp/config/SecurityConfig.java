@@ -1,6 +1,7 @@
 package com.bookshop.BookShopApp.config;
 
-import com.bookshop.BookShopApp.security.JWTRequestFilter;
+import com.bookshop.BookShopApp.security.JwtRequestFilter;
+import com.bookshop.BookShopApp.security.Oauth2AuthenticationSuccessHandler;
 import com.bookshop.BookShopApp.services.BookstoreUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,22 +11,26 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
-    private final JWTRequestFilter filter;
+    private final JwtRequestFilter filter;
+    private final LogoutHandler logoutHandler;
+    private final Oauth2AuthenticationSuccessHandler successHandler;
 
     @Autowired
-    public SecurityConfig(BookstoreUserDetailsService bookstoreUserDetailsService, JWTRequestFilter filter) {
+    public SecurityConfig(BookstoreUserDetailsService bookstoreUserDetailsService, JwtRequestFilter filter, LogoutHandler logoutHandler, Oauth2AuthenticationSuccessHandler successHandler) {
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
         this.filter = filter;
+        this.logoutHandler = logoutHandler;
+        this.successHandler = successHandler;
     }
 
     @Bean
@@ -48,18 +53,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/my","/profile").authenticated() //.hasRole("USER")  //.authenticated()
-                .antMatchers("/**").permitAll()
+                .sessionManagement()
+                .and().authorizeRequests()
+                       .antMatchers("/my","/profile").authenticated() //.hasRole("USER")  //.authenticated()
+                       .antMatchers("/**").permitAll()
                 .and().formLogin()
-                .loginPage("/signin")//.failureUrl("/signin")
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/signin").deleteCookies("token")
+                      .loginPage("/signin")
+                      .failureUrl("/signin")
+                .and().logout()
+                       .logoutUrl("/logout")
+                       .logoutSuccessUrl("/signin")
+                       .addLogoutHandler(logoutHandler)
+                       .deleteCookies("token")
+                       .deleteCookies("refresh")
+                       .clearAuthentication(true)
+                .and().addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .oauth2Client()
                 .and().oauth2Login()
-                .and().oauth2Client();
-
-
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+                      .successHandler(successHandler)
+                      .userInfoEndpoint();
 
     }
+
 }

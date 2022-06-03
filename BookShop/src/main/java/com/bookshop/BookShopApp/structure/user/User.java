@@ -45,6 +45,11 @@ public class User {
     @ApiModelProperty("login verification code")
     private String code;
 
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+    @ApiModelProperty("authorization roles")
+    private String roles;
+
+
     @ManyToMany
     @JsonIgnore
     @JoinTable(name = "book2user",
@@ -180,4 +185,11 @@ public class User {
         this.code = code;
     }
 
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
 }
