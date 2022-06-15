@@ -25,4 +25,7 @@ public interface UserContactRepository extends JpaRepository<UserContact, Intege
     @Modifying
     @Query(value = "UPDATE user_contact SET user_id = ?1 WHERE user_id = ?2", nativeQuery = true)
     void modifyUserContactUserId(Integer userId, Integer tempUserId);
+
+    @Modifying
+    void deleteUserContactByUserId(Integer userId);
 }

@@ -6,14 +6,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
+@Transactional
 public interface BookRepository extends JpaRepository<Book,Integer> {
 
     List<Book> findBooksByTitleContaining(String bookTitle);
 
     Page<Book> findBookByTitleContaining(String bookTitle, Pageable nextPage);
+
+
 
     @Query(value =  "SELECT * FROM book order by rating, pub_date DESC", nativeQuery = true)
     Page<Book> findOrderByRatingAndPubDate(Pageable nextPage);
@@ -52,7 +57,8 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
     @Query(value = "SELECT * FROM book WHERE id in (SELECT book_id FROM book2user WHERE type_id = (SELECT id FROM book2user_type WHERE code = ?2 ) and user_id = ?1 )" , nativeQuery = true)
     List<Book> findBooksByUserIdAndStatus(Integer userId, String status);
 
-
+    @Modifying
+    void deleteBookById(Integer bookId);
 
 
 }

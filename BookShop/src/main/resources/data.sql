@@ -10015,6 +10015,10 @@ insert into users (id, hash, reg_time, balance, name) values (997, '7b0563138d96
 insert into users (id, hash, reg_time, balance, name) values (998, 'c252090f06807748b3b160d3bc3ded363ea7ffaff8eb9141c068164ab3c489b5', '2021/11/23', 3178, 'Doe Wayland');
 insert into users (id, hash, reg_time, balance, name) values (999, '0c888d32c52b86cd62d1b4d6ab960a1cdfb7b2981dd0e2457ec1cc5ce1f1b117', '2021/07/04', 0, 'Sol Hauger');
 insert into users (id, hash, reg_time, balance, name) values (1000, '515d3a5db4abaa10f0696c13e92730f42c610fd514e59a18ad30861821771e2d', '2021/05/30', 2667, 'Morgen Breewood');
+insert into users (id, hash, reg_time, balance, name, code) values (1001, '515d3a5db4abaa10f0696c13e92730f42c610fd514e59a18ad30861821771000', '2021/05/30', 0, 'TestUser', '$2a$10$/1il6yQsWclYpW6psJRDx.zs2VwF8wiKv3fGFkzsA9YGK6ERXbs.q');
+
+insert into user_contact (id, user_id, type, approved, code, code_trails, code_time, contact) values (1, 1001, 1, 1, '123 123', 1, '2021/05/30 08:00', 'test@test.com');
+insert into user_contact (id, user_id, type, approved, code, code_trails, code_time, contact) values (2, 1001, 0, 1, '123 123', 1, '2021/05/30 08:00', '+7(903)123-23-23');
 
 
 insert into book2user (id, time, type_id, book_id, user_id) values (1, '2021/07/25', 2, 760, 51);

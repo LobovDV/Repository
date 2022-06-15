@@ -32,4 +32,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query(value = "UPDATE users SET code = ?1 WHERE id = ?2 ", nativeQuery = true)
     void modifyUserLoginVerificationCode(String code, Integer userId);
+
 }

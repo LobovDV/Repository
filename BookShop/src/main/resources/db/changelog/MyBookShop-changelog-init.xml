@@ -481,7 +481,8 @@
         <createTable tableName="user_contact">
             <column autoIncrement="true"
                     name="id"
-                    type="INT">
+                    type="INT"
+                    startWith="3">
                 <constraints nullable="false"
                              primaryKey="true"
                              primaryKeyName="pk_user_contact"/>
@@ -515,7 +516,7 @@
             <column autoIncrement="true"
                     name="id"
                     type="INT"
-                    startWith="1001">
+                    startWith="1002">
                 <constraints nullable="false"
                              primaryKey="true"
                              primaryKeyName="pk_users"/>
@@ -548,30 +549,30 @@
 
     </changeSet>
     <changeSet id="1650991337334-20" author="Дмитрий (generated)">
-        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2genre" constraintName="fk_boo_on_book"
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2genre" constraintName="fk_book_on_genre"
                                  referencedColumnNames="id" referencedTableName="book"/>
     </changeSet>
     <changeSet id="1650991337334-21" author="Дмитрий (generated)">
         <addForeignKeyConstraint baseColumnNames="genre_id" baseTableName="book2genre"
-                                 constraintName="fk_boo_on_genre_entity" referencedColumnNames="id"
+                                 constraintName="fk_genre_on_book" referencedColumnNames="id"
                                  referencedTableName="genre"/>
     </changeSet>
     <changeSet id="1650991337334-22" author="Дмитрий (generated)">
-        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2author" constraintName="fk_boo_on_book"
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2author" constraintName="fk_book_on_author"
                                  referencedColumnNames="id" referencedTableName="book"/>
     </changeSet>
     <changeSet id="1650991337334-23" author="Дмитрий (generated)">
         <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="book2author"
-                                 constraintName="fk_boo_on_author_entity" referencedColumnNames="id"
+                                 constraintName="fk_author_on_book" referencedColumnNames="id"
                                  referencedTableName="author"/>
     </changeSet>
     <changeSet id="1650991337334-24" author="Дмитрий (generated)">
-        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2user" constraintName="fk_boo_on_book"
+        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="book2user" constraintName="fk_book_on_user"
                                  referencedColumnNames="id" referencedTableName="book"/>
     </changeSet>
     <changeSet id="1650991337334-25" author="Дмитрий (generated)">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="book2user"
-                                 constraintName="fk_boo_on_user_entity" referencedColumnNames="id"
+                                 constraintName="fk_user_on_book" referencedColumnNames="id"
                                  referencedTableName="users"/>
     </changeSet>
     <changeSet id="1650991337334-26" author="Дмитрий (generated)">

@@ -27,10 +27,9 @@ public class Book2UserService {
         return false;
     }
 
-    public boolean updateByBookIdAnfUserId(Integer bookId, Integer userId, String status) {
+    public void updateByBookIdAnfUserId(Integer bookId, Integer userId, String status) {
         if (book2UserRepository.findBook2UserByBookIdAndUserId(bookId, userId) != null) {
             book2UserRepository.updateStatusByBookIdAndUserId(bookId, userId, status);
-            return true;
         } else {
             Book2User book2User = new Book2User();
             book2User.setBookId(bookId);
@@ -38,7 +37,6 @@ public class Book2UserService {
             book2User.setTime(LocalDateTime.now());
             book2User.setTypeId(book2UserRepository.getStatusIdByCode(status));
             book2UserRepository.save(book2User);
-            return false;
         }
     }
 

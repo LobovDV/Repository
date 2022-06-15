@@ -38,4 +38,7 @@ public interface BookReviewRepository extends JpaRepository<BookReview, Integer>
     @Modifying
     void deleteBookReviewByUserId(Integer userId);
 
+    @Modifying
+    void deleteBookReviewById(Integer reviewId);
+
 }

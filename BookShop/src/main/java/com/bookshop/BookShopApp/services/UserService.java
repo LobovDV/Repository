@@ -132,4 +132,12 @@ public class UserService {
     public User getBookstoreUserByContact(String contact, int type) {
         return userRepository.findBookstoreUserByContact(contact, type);
     }
+
+    public void removeUserById(Integer userId) {
+        userRepository.deleteUserById(userId);
+    }
+
+    public void removeUserContactByUserId(Integer userId) {
+        userContactRepository.deleteUserContactByUserId(userId);
+    }
 }

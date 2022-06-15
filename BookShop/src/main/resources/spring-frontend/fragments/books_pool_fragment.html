@@ -2,15 +2,15 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <div class="Cards Cards_refresh" th:fragment="pool">
     <div class="Card" th:each="book: ${booksListToView}">
-        <div class="Card-picture"><a href="#" th:href="@{'/books/' + ${book.slug}}">
-            <img th:src="${book.image}"  src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
+        <a class="Card-picture" href="#" th:href="@{'/books/' + ${book.slug}}">
+            <img class="Book-image" th:src="${book.image}"  src="/assets/img/content/main/card.jpg" alt="card.jpg"/>
             <div class="Card-sale" th:if="${book.discount} != 0" th:text="${book.discount} + '% скидка'">30% скидка </div>
             <div class="Card-ribbon" th:if="${book.isBestseller}  == 1">
                 <span class="Card-ribbonText">Бестселлер</span>
             </div>
-        </div>
+        </a>
         <div class="Card-content">
-            <strong class="Card-title"><a href="#" th:text="${book.title}">Техника</a>
+            <strong class="Card-title"><a th:href="@{'/books/' + ${book.slug}}" href="#" th:text="${book.title}">Техника</a>
             </strong>
             <div class="Card-description" th:text="${book.getAuthorsString()}">Кондратенко Александр Петрович
             </div>

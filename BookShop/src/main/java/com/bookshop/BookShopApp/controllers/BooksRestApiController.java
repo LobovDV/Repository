@@ -172,9 +172,7 @@ public class BooksRestApiController {
                         errorMessage = "Ошибка удаления из Отложенных/Корзины";
                     }
                 } else {
-                    if (!book2UserService.updateByBookIdAnfUserId(booksIds[i], userId, status)) {
-                        errorMessage = "Ошибка обновления статуса";
-                    }
+                    book2UserService.updateByBookIdAnfUserId(booksIds[i], userId, status);
                 }
                 bookService.updateBookPopularity(booksIds[i]);
         }

@@ -15,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -121,22 +119,22 @@ public class AuthUserController {
 
     @PostMapping("/reg")
     public String handleUserRegistration(RegistrationForm registrationForm, Model model, @CookieValue(name = "bookShop",
-            required = false) String bookShop) throws NoSuchAlgorithmException {
-        String result = userRegister.registerNewUser(registrationForm, bookShop);
-        if (result.isEmpty()) {
+            required = false) String bookShop) {
+        User user = userRegister.registerNewUser(registrationForm, bookShop);
+        if (user != null) {
             model.addAttribute("regOk", true);
             return "signin";
         } else {
             model.addAttribute("regForm", registrationForm);
-            model.addAttribute("addError", result);
+            model.addAttribute("addError", "User creation error");
             return "signup";
         }
     }
 
     @PostMapping("/login")
     @ResponseBody
-    public JwtResponse  handleLogin(@RequestBody JwtRequest JWTRequest, HttpServletResponse httpServletResponse) {
-        JwtResponse loginResponse = userRegister.jwtLogin(JWTRequest);
+    public JwtResponse  handleLogin(@RequestBody JwtRequest jwtRequest, HttpServletResponse httpServletResponse) {
+        JwtResponse loginResponse = userRegister.jwtLogin(jwtRequest);
         String result = loginResponse.getResult();
         if (!result.equals("error")) {
             Cookie cookie = new Cookie("token", loginResponse.getAccessToken());

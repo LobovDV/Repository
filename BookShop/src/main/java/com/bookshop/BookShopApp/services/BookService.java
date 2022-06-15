@@ -3,6 +3,8 @@ package com.bookshop.BookShopApp.services;
 import com.bookshop.BookShopApp.data.*;
 import com.bookshop.BookShopApp.errors.BookstoreApiWrongParameterException;
 import com.bookshop.BookShopApp.structure.book.file.BookFile;
+import com.bookshop.BookShopApp.structure.book.links.Book2User;
+import com.bookshop.BookShopApp.structure.book.links.Book2UserType;
 import com.bookshop.BookShopApp.structure.book.review.BookReview;
 import com.bookshop.BookShopApp.structure.book.review.BookReviewLike;
 import com.bookshop.BookShopApp.structure.book.review.BookScore;
@@ -234,8 +236,10 @@ public class BookService {
         return bookReviewRepository.findBookReviewByBookIdAndUserId(bookId, userId);
     }
 
-    public void newBookReview(BookReview bookReview) {
+    public Integer newBookReview(BookReview bookReview) {
+
         bookReviewRepository.save(bookReview);
+        return bookReview.getId();
     }
 
     public void setAllReviewRatings() {
@@ -270,5 +274,44 @@ public class BookService {
         if (sum != null) {
             return sum;
         } else { return 0;}
+    }
+
+    public void addBook2User(Integer bookId, Integer userId, Integer book2UserType) {
+        Book2User book2User = new Book2User();
+        book2User.setBookId(bookId);
+        book2User.setUserId(userId);
+        book2User.setTime(LocalDateTime.now());
+        book2User.setTypeId(book2UserType);
+        book2UserRepository.save(book2User);
+    }
+
+    public void removeBook2UserByUserId(Integer userId) {
+        book2UserRepository.deleteBook2UserByUserId(userId);
+    }
+
+    public void  removeBookById(Integer bookId) {
+        bookRepository. deleteBookById(bookId);
+    }
+
+    public Book addBook(short isBestseller, String slug, String title, String image, String description, Integer price, short discount) {
+        Book book = new Book();
+        book.setPubDate(new Date());
+        book.setIsBestseller(isBestseller);
+        book.setSlug(slug);
+        book.setTitle(title);
+        book.setImage(image);
+        book.setDescription(description);
+        book.setPrice(price);
+        book.setDiscount(discount);
+        bookRepository.save(book);
+        return book;
+    }
+
+    public void removeBookReviewLikeByUserIdAndReviewId(Integer userId, Integer reviewId) {
+        bookReviewLikeRepository.deleteBookReviewLikeByUserIdAndReviewId(userId, reviewId);
+    }
+
+    public void removeBookReviewById(Integer reviewId) {
+        bookReviewRepository.deleteBookReviewById(reviewId);
     }
 }

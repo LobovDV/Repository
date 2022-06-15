@@ -63,10 +63,23 @@ public class UserRegister {
         }
     }
 
-    public String registerNewUser(RegistrationForm registrationForm, String bookShop) {
+    public User registerNewUser(RegistrationForm registrationForm, String bookShop) {
         int userFromCookieId = 0;
         if ((bookShop != null) & (bookShop != "")) {
             userFromCookieId = Integer.parseInt(bookShop);
+        }
+        User user1 = userRepository.findBookstoreUserByContact(registrationForm.getPhone(), 0);
+        User user2 = userRepository.findBookstoreUserByContact(registrationForm.getEmail(), 1);
+        int userIdFromCookie = 0;
+        try {
+            userIdFromCookie = Integer.parseInt(bookShop);
+        } catch (Exception ignored) {}
+
+        if (user1 != null) {
+            if ((user1.getId() != userIdFromCookie)) {return null;}
+        }
+        if (user2 != null) {
+            if ((user2.getId() != userIdFromCookie)) {return null;}
         }
 
         User user = new User();
@@ -78,8 +91,10 @@ public class UserRegister {
         userRepository.save(user);
         int userId = user.getId();
 
-        userContactRepository.modifyUserContactUserId(userId, userFromCookieId);
-        return "";
+        if (userFromCookieId > 0) {
+            userContactRepository.modifyUserContactUserId(userId, userFromCookieId);
+        }
+        return user;
     }
 
 

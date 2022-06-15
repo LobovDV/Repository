@@ -1,5 +1,8 @@
 package com.bookshop.BookShopApp.security;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class RegistrationForm {
 
     private String name;

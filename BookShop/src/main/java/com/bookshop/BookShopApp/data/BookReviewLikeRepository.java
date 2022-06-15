@@ -15,4 +15,7 @@ public interface BookReviewLikeRepository extends JpaRepository<BookReviewLike, 
     @Modifying
     void deleteBookReviewLikeByUserId(Integer userId);
 
+    @Modifying
+    void deleteBookReviewLikeByUserIdAndReviewId(Integer userId, Integer reviewId);
+
 }
