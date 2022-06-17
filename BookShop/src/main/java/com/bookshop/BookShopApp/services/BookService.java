@@ -4,7 +4,6 @@ import com.bookshop.BookShopApp.data.*;
 import com.bookshop.BookShopApp.errors.BookstoreApiWrongParameterException;
 import com.bookshop.BookShopApp.structure.book.file.BookFile;
 import com.bookshop.BookShopApp.structure.book.links.Book2User;
-import com.bookshop.BookShopApp.structure.book.links.Book2UserType;
 import com.bookshop.BookShopApp.structure.book.review.BookReview;
 import com.bookshop.BookShopApp.structure.book.review.BookReviewLike;
 import com.bookshop.BookShopApp.structure.book.review.BookScore;

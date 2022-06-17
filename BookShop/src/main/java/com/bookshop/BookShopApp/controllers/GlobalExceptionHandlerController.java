@@ -6,8 +6,6 @@ import com.bookshop.BookShopApp.errors.EmptySearchException;
 import com.bookshop.BookShopApp.errors.UploadFileException;
 import com.bookshop.BookShopApp.data.ApiResponse;
 import com.bookshop.BookShopApp.structure.book.Book;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -48,8 +46,4 @@ public class GlobalExceptionHandlerController {
         return "redirect:/books/"+e.getSlug();
     }
 
-//    @ExceptionHandler(JwtException.class)
-//    public String handleExpiredJwtException(ExpiredJwtException e){
-//        return "redirect:/login";
-//    }
 }

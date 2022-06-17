@@ -1,5 +1,6 @@
 package com.bookshop.BookShopApp.services;
 
+import com.bookshop.BookShopApp.annotation.SuccessLogin;
 import com.bookshop.BookShopApp.data.UserContactRepository;
 import com.bookshop.BookShopApp.security.JwtRefreshStorage;
 import com.bookshop.BookShopApp.security.JwtRequest;
@@ -47,6 +48,7 @@ public class UserRegister {
         this.jwtRefreshStorage = jwtRefreshStorage;
     }
 
+    @SuccessLogin
     public JwtResponse jwtLogin(JwtRequest JWTRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(JWTRequest.getContact(), JWTRequest.getCode()));

@@ -20,12 +20,15 @@ public class JwtBlackListToken {
         this.jwtProvider = jwtProvider;
     }
 
-    public void addTokenToBlackList(String token, int type) {
-        if (!expiringMap.containsKey(token)){
-            Date tokenExpiryDate = type ==1 ? jwtProvider.extractAccessExpiration(token) : jwtProvider.extractRefreshExpiration(token);
+    public boolean addTokenToBlackList(String token, int type) {
+        boolean expired = type == 1 ? jwtProvider.isAccessTokenExpired(token) : jwtProvider.isRefreshTokenExpired(token);
+        if ((!expiringMap.containsKey(token)) & (!expired)) {
+            Date tokenExpiryDate = type == 1 ? jwtProvider.extractAccessExpiration(token) : jwtProvider.extractRefreshExpiration(token);
             long ttlForToken = getTTLForToken(tokenExpiryDate);
             expiringMap.put(token, tokenExpiryDate, ttlForToken, TimeUnit.SECONDS);
+            return true;
         }
+        return false;
     }
 
     public boolean isTokenInBlackList(String token) {

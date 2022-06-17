@@ -21,7 +21,6 @@ public class UserLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
-//        authentication.setAuthenticated(false);
         SecurityContextHolder.clearContext();
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies != null) {
