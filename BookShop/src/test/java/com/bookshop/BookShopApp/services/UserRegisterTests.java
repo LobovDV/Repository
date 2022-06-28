@@ -1,19 +1,5 @@
 package com.bookshop.BookShopApp.services;
 
-//import com.bookshop.BookShopApp.data.UserRepository;
-//import com.bookshop.BookShopApp.security.RegistrationForm;
-//import com.bookshop.BookShopApp.structure.enums.ContactType;
-//import com.bookshop.BookShopApp.structure.user.User;
-//import org.hamcrest.CoreMatchers;
-//import org.junit.jupiter.api.AfterEach;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.test.context.TestPropertySource;
-import com.bookshop.BookShopApp.data.UserContactRepository;
 import com.bookshop.BookShopApp.data.UserRepository;
 import com.bookshop.BookShopApp.security.JwtRequest;
 import com.bookshop.BookShopApp.security.JwtResponse;
@@ -24,13 +10,10 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 
@@ -107,7 +90,7 @@ class UserRegisterTests {
         jwtRequest.setCode("123 123");
         JwtResponse jwtResponse = userRegister.jwtLogin(jwtRequest);
         assertNotNull(jwtResponse);
-        assertFalse(jwtResponse.getResult().equals("error"));
+        assertFalse(jwtResponse.isResult());
         assertFalse(jwtResponse.getAccessToken().isEmpty());
         assertFalse(jwtResponse.getRefreshToken().isEmpty());
         assertTrue(jwtResponse.getError().isEmpty());

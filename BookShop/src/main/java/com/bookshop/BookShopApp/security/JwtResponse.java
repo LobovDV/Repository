@@ -2,23 +2,23 @@ package com.bookshop.BookShopApp.security;
 
 public class JwtResponse {
 
-    private String result;
+    private boolean result;
     private String accessToken;
     private String refreshToken;
     private String error;
 
-    public JwtResponse(String result, String accessToken, String refreshToken, String error) {
+    public JwtResponse(boolean result, String accessToken, String refreshToken, String error) {
         this.result = result;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.error = error;
     }
 
-    public String getResult() {
+    public boolean isResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(boolean result) {
         this.result = result;
     }
 

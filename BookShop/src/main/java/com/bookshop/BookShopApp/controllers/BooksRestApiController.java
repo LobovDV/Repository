@@ -159,28 +159,27 @@ public class BooksRestApiController {
     @PostMapping("/changeBookStatus")
     @ApiOperation("operation to change book status, parameters bookIds Integer[], String status")
     @ResponseBody
-    public HashMap<String, Object> handleChangeBookStatus(@RequestParam(value="booksIds[]") Integer[] booksIds, String status, @CookieValue(name = "bookShop",
-            required = false) String bookShop ) {
+    public HashMap<String, Object> handleChangeBookStatus(@RequestBody Map<String, Object> body, @CookieValue(name = "bookShop", required = false) String bookShop ) {
         String errorMessage = "";
-
+        ArrayList<Integer> booksIds = (ArrayList<Integer>) body.get("booksIds");
+        String status = (String) body.get("status");
         HashMap<String, Object> result = new HashMap<>();
         result.put("result", true);
         Integer userId = userService.getCurrentUserId(bookShop);
-        for (int i = 0; i < booksIds.length; i++) {
+        for (Integer bookId : booksIds) {
                 if (status.equals("UNLINK")) {
-                    if(!book2UserService.deleteByBookIdAndUserId(booksIds[i], userId)) {
+                    if(!book2UserService.deleteByBookIdAndUserId(bookId, userId)) {
                         errorMessage = "Ошибка удаления из Отложенных/Корзины";
                     }
                 } else {
-                    book2UserService.updateByBookIdAnfUserId(booksIds[i], userId, status);
+                    book2UserService.updateByBookIdAnfUserId(bookId, userId, status);
                 }
-                bookService.updateBookPopularity(booksIds[i]);
+                bookService.updateBookPopularity(bookId);
         }
         if (!errorMessage.equals("")) {
             result.replace("result", true, false);
             result.put("error", errorMessage);
         }
-
         return result;
     }
 
@@ -188,8 +187,10 @@ public class BooksRestApiController {
     @PostMapping("/rateBook")
     @ApiOperation("operation to change book rating, parameters bookId Integer, value short")
     @ResponseBody
-    public HashMap<String, Object> handleAddBookRatingScore(Integer bookId, short value, @CookieValue(name = "bookShop", required = false) String bookShop ) {
+    public HashMap<String, Object> handleAddBookRatingScore(@RequestBody Map<String, Integer> body, @CookieValue(name = "bookShop", required = false) String bookShop ) {
         String errorMessage = "";
+        Integer bookId =  body.get("bookId");
+        Integer value = body.get("value");
         HashMap<String, Object> result = new HashMap<>();
         result.put("result", true);
         Integer userId = userService.getCurrentUserId(bookShop);
@@ -211,8 +212,10 @@ public class BooksRestApiController {
     @PostMapping("/bookReview")
     @ApiOperation("operation to add book review, parameters bookId Integer, text String")
     @ResponseBody
-    public HashMap<String, Object> handleAddBookReview(Integer bookId, String text, @CookieValue(name = "bookShop", required = false) String bookShop ) {
+    public HashMap<String, Object> handleAddBookReview(@RequestBody Map<String, String> body, @CookieValue(name = "bookShop", required = false) String bookShop ) {
         String errorMessage = "";
+        Integer bookId = Integer.parseInt(body.get("bookId"));
+        String text = body.get("text");
         HashMap<String, Object> result = new HashMap<>();
         result.put("result", false);
         if(text.length() < 100) {
@@ -241,8 +244,10 @@ public class BooksRestApiController {
     @PostMapping("/rateBookReview")
     @ApiOperation("operation to add book review like/dislike, parameters reviewId Integer, value short (1/-1)")
     @ResponseBody
-    public HashMap<String, Object> handleAddBookReviewLike(Integer reviewId, short value, @CookieValue(name = "bookShop", required = false) String bookShop ) {
+    public HashMap<String, Object> handleAddBookReviewLike(@RequestBody Map<String, String> body, @CookieValue(name = "bookShop", required = false) String bookShop ) {
         String errorMessage = "";
+        Integer reviewId =  Integer.parseInt(body.get("reviewId"));
+        short value = Short.parseShort(body.get("value"));
         HashMap<String, Object> result = new HashMap<>();
         result.put("result", false);
         Integer userId = userService.getCurrentUserId(bookShop);

@@ -46,4 +46,5 @@ public class GlobalExceptionHandlerController {
         return "redirect:/books/"+e.getSlug();
     }
 
+
 }

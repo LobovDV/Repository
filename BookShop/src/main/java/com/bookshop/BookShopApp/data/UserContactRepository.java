@@ -28,4 +28,8 @@ public interface UserContactRepository extends JpaRepository<UserContact, Intege
 
     @Modifying
     void deleteUserContactByUserId(Integer userId);
+
+    @Modifying
+    @Query(value = "DELETE from user_contact WHERE user_id = ?1 and type = ?2", nativeQuery = true)
+    void deleteUserContactByUserIdAndType(Integer userId, int type);
 }

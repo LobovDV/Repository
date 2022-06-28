@@ -56,12 +56,18 @@
             </column>
             <column name="book_id"
                     type="INT">
-                <constraints nullable="false"/>
             </column>
             <column name="description"
                     type="TEXT">
                 <constraints nullable="false"/>
             </column>
+            <column name="confirmed"
+                    type="INT">
+            </column>
+            <column name="referer"
+                    type="VARCHAR(255)">
+            </column>
+
         </createTable>
     </changeSet>
     <changeSet id="1650991337334-3"
@@ -541,6 +547,9 @@
             <column name="code"
                     type="VARCHAR(255)">
             </column>
+            <column name="code_time"
+                    type="TIMESTAMP">
+            </column>
             <column name="roles"
                     type="VARCHAR(255)">
             </column>
@@ -600,11 +609,6 @@
         <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="book2user"
                                  constraintName="fk_book2user_on_types" referencedColumnNames="id"
                                  referencedTableName="book2user_type"/>
-    </changeSet>
-    <changeSet id="1650991337334-31" author="Дмитрий (generated)">
-        <addForeignKeyConstraint baseColumnNames="book_id" baseTableName="balance_transaction"
-                                 constraintName="fk_transaction_on_book" referencedColumnNames="id"
-                                 referencedTableName="book"/>
     </changeSet>
     <changeSet id="1650991337334-32" author="Дмитрий (generated)">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="balance_transaction"

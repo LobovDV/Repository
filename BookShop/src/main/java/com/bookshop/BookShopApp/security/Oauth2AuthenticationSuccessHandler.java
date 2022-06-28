@@ -1,6 +1,7 @@
 package com.bookshop.BookShopApp.security;
 
 import com.bookshop.BookShopApp.annotation.SuccessLogin;
+import com.bookshop.BookShopApp.data.Book2UserRepository;
 import com.bookshop.BookShopApp.data.UserContactRepository;
 import com.bookshop.BookShopApp.data.UserRepository;
 import com.bookshop.BookShopApp.services.BookstoreUserDetailsService;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -35,15 +37,16 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final UserContactRepository userContactRepository;
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final JwtProvider jwtProvider;
+    private final Book2UserRepository book2UserRepository;
 
     @Autowired
-    public Oauth2AuthenticationSuccessHandler(JwtRefreshStorage jwtRefreshStorage, UserRepository userRepository, BookstoreUserDetailsService bookstoreUserDetailsService, JwtProvider jwtProvider,
-                                              UserContactRepository userContactRepository) {
+    public Oauth2AuthenticationSuccessHandler(JwtRefreshStorage jwtRefreshStorage, UserRepository userRepository, UserContactRepository userContactRepository, BookstoreUserDetailsService bookstoreUserDetailsService, JwtProvider jwtProvider, Book2UserRepository book2UserRepository) {
         this.jwtRefreshStorage = jwtRefreshStorage;
         this.userRepository = userRepository;
+        this.userContactRepository = userContactRepository;
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
         this.jwtProvider = jwtProvider;
-        this.userContactRepository = userContactRepository;
+        this.book2UserRepository = book2UserRepository;
     }
 
     @Override
@@ -58,6 +61,7 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
         DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
+
 
 
         User user = userRepository.findBookstoreUserByContact(email, 1);
@@ -82,6 +86,22 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
             userContactRepository.save(userContact);
 
         }
+
+        Cookie[] cookies = httpServletRequest.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("bookShop")) {
+                Integer userFromCookieId = 0;
+                if ((cookie.getValue() != null) & (cookie.getValue() !="")){
+                    if (userRepository.findUserById(Integer.valueOf(cookie.getValue())) != null) {
+                        userFromCookieId = Integer.parseInt(cookie.getValue());
+                    }
+                }
+                if (userFromCookieId > 0) {
+                    book2UserRepository.modifyUserId(userFromCookieId, user.getId());
+                }
+            }
+        }
+
         BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(email);
         final String accessToken = jwtProvider.generateAccessToken(user, userDetails);
         final String refreshToken = jwtProvider.generateRefreshToken(userDetails);

@@ -78,9 +78,13 @@ public class UserLoginAspect {
         Object[] parameters = pjp.getArgs();
         if (pjp.toString().contains("jwtLogin")) {
             JwtResponse jwtResponse = (JwtResponse) returnValue;
-            if (!jwtResponse.getResult().equals("")) {
+            if (jwtResponse.isResult()) {
                 JwtRequest jwtRequests = (JwtRequest) parameters[0];
-                userName = " local " + userService.getBookstoreUserByContact(jwtRequests.getContact(), 0).getName();
+                if (jwtRequests.getContact().contains("@")) {
+                    userName = " local " + userService.getBookstoreUserByContact(jwtRequests.getContact(), 1).getName();
+                } else {
+                    userName = " local " + userService.getBookstoreUserByContact(jwtRequests.getContact(), 0).getName();
+                }
                 login = jwtRequests.getContact();
                 logger.info("Success login user " + userName + " with login " + login + " " + LocalDateTime.now());
             } else {logger.info("Login Failed " + LocalDateTime.now());}

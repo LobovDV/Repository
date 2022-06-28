@@ -32,4 +32,8 @@ public interface Book2UserRepository extends JpaRepository<Book2User, Integer> {
 
     @Modifying
     void deleteBook2UserByUserId(Integer userId);
+
+    @Modifying
+    @Query(value = "UPDATE book2user SET user_id = ?2 WHERE user_id = ?1",nativeQuery = true)
+    void modifyUserId(Integer userId, Integer newUserId);
 }

@@ -215,7 +215,7 @@ public class BookService {
         return bookScoreRepository.findBookScoreByBookIdAndUserId(book_id, user_id);
     }
 
-    public void modifyBookScore(Integer scoreId, LocalDateTime time, short score) {
+    public void modifyBookScore(Integer scoreId, LocalDateTime time, Integer score) {
         bookScoreRepository.updateBookScore(scoreId, time, score);
     }
 
@@ -313,4 +313,8 @@ public class BookService {
     public void removeBookReviewById(Integer reviewId) {
         bookReviewRepository.deleteBookReviewById(reviewId);
     }
+
+    public void updateBookStatusByBookIdAndUserId(Integer bookId, Integer userId, String status) {
+        book2UserRepository.updateStatusByBookIdAndUserId(bookId, userId, status);
+    };
 }

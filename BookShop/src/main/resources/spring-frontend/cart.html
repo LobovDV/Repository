@@ -84,9 +84,11 @@
                         </strong><span class="Cart-price" th:text="${cartPrice}">534 ₽</span>
                         <span class="Cart-price_old" th:if="${cartPrice} != ${cartPriceOld}" th:text="${cartPriceOld}">658 ₽</span>
                     </div>
-                    <div class="Cart-block"><a class="btn btn_success btn_md" href="/order.html" th:text="#{postpond.buttonBuy}">Купить</a>
+                    <div class="Cart-block">
+                        <a class="btn btn_success btn_md Cart-Buy" href="/order.html" th:text="#{postpond.buttonBuy}">Купить</a>
                     </div>
                 </div>
+                <div class="Topup-success" th:text="${resultPay}"></div>
             </form>
         </main>
     </div>

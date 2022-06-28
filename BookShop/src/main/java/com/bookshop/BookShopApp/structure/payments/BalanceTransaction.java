@@ -31,7 +31,7 @@ public class BalanceTransaction {
     @ApiModelProperty("transaction value ( > 0 Credit, < 0 Debit)")
     private int value;
 
-    @Column(name="book_id", columnDefinition = "INT NOT NULL")
+    @Column(name="book_id")
     @ApiModelProperty("transaction book id from table books")
     private int bookId;
 
@@ -39,23 +39,17 @@ public class BalanceTransaction {
     @ApiModelProperty("transaction description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false, insertable = false, updatable = false)
-    @JsonIgnore
-    private Book transactionBook;
+    @ApiModelProperty("Is transaction confirmed")
+    private int confirmed;
+
+    @ApiModelProperty("Referer Url")
+    private String referer;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     @JsonIgnore
     private User transactionUser;
-
-    public Book getTransactionBook() {
-        return transactionBook;
-    }
-
-    public void setTransactionBook(Book transactionBook) {
-        this.transactionBook = transactionBook;
-    }
 
     public User getTransactionUser() {
         return transactionUser;
@@ -111,5 +105,21 @@ public class BalanceTransaction {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(int confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public String getReferer() {
+        return referer;
+    }
+
+    public void setReferer(String referer) {
+        this.referer = referer;
     }
 }

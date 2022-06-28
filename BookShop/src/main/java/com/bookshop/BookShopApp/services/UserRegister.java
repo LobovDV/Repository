@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
@@ -30,18 +29,16 @@ public class UserRegister {
     private final JwtRefreshStorage jwtRefreshStorage;
     private final UserRepository userRepository;
     private final UserContactRepository userContactRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final JwtProvider jwtProvider;
 
 
     @Autowired
-    public UserRegister(UserRepository userRepository, UserContactRepository userContactRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+    public UserRegister(UserRepository userRepository, UserContactRepository userContactRepository, AuthenticationManager authenticationManager,
                         BookstoreUserDetailsService bookstoreUserDetailsService, JwtProvider jwtProvider, JwtRefreshStorage jwtRefreshStorage) {
         this.userRepository = userRepository;
         this.userContactRepository = userContactRepository;
-        this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
         this.jwtProvider = jwtProvider;
@@ -59,9 +56,9 @@ public class UserRegister {
             final String accessToken = jwtProvider.generateAccessToken(user, userDetails);
             final String refreshToken = jwtProvider.generateRefreshToken(userDetails);
             jwtRefreshStorage.addTokenToStorage(refreshToken, userDetails.getUsername());
-            return new JwtResponse(accessToken, accessToken, refreshToken, "");
+            return new JwtResponse(true, accessToken, refreshToken, "");
         } catch (AuthenticationException e) {
-            return new JwtResponse("error", "", "", "Ошибка авторизации");
+            return new JwtResponse(false, "", "", "Ошибка авторизации");
         }
     }
 

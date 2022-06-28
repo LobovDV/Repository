@@ -35,11 +35,11 @@ public class JwtGenerate {
                 if (user != null) {
                     BookstoreUserDetails userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(login);
                     final String accessToken = jwtProvider.generateAccessToken(user, userDetails);
-                    return new JwtResponse(accessToken, accessToken, null, "");
-                } else {return new JwtResponse("", null, null, "Пользователь не найден");}
+                    return new JwtResponse(true, accessToken, null, "");
+                } else {return new JwtResponse(false, null, null, "Пользователь не найден");}
             }
         }
-        return new JwtResponse(null,null, null, "Ошибка валидации");
+        return new JwtResponse(false,null, null, "Ошибка валидации");
     }
 
     public JwtResponse refresh(String refreshToken) {
@@ -55,10 +55,10 @@ public class JwtGenerate {
                     final String newRefreshToken = jwtProvider.generateRefreshToken(userDetails);
                     jwtRefreshStorage.addTokenToStorage(newRefreshToken, userDetails.getUsername());
                     jwtRefreshStorage.removeFromStorage(refreshToken);
-                    return new JwtResponse(accessToken, accessToken, newRefreshToken, null);
-                } else {return new JwtResponse("error", null, null, "Пользователь не найден");}
+                    return new JwtResponse(true, accessToken, newRefreshToken, null);
+                } else {return new JwtResponse(false, null, null, "Пользователь не найден");}
             }
         }
-        return new JwtResponse("error", null, null, "Невалидный JWT токен");
+        return new JwtResponse(false, null, null, "Невалидный JWT токен");
     }
 }

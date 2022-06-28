@@ -28,8 +28,11 @@ public class Book2UserService {
     }
 
     public void updateByBookIdAnfUserId(Integer bookId, Integer userId, String status) {
-        if (book2UserRepository.findBook2UserByBookIdAndUserId(bookId, userId) != null) {
-            book2UserRepository.updateStatusByBookIdAndUserId(bookId, userId, status);
+        Book2User book2UserExists = book2UserRepository.findBook2UserByBookIdAndUserId(bookId, userId);
+        if (book2UserExists != null)  {
+            if ((book2UserExists.getTypeId() != 3) & (book2UserExists.getTypeId() != 4)){
+                book2UserRepository.updateStatusByBookIdAndUserId(bookId, userId, status);
+            }
         } else {
             Book2User book2User = new Book2User();
             book2User.setBookId(bookId);

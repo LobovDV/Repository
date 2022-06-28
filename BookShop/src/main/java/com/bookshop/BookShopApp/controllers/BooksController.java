@@ -51,11 +51,12 @@ public class BooksController {
            required = false) String bookShop, Model model) throws NoSuchAlgorithmException {
         Book book = bookService.getBookBySlug(slug);
         model.addAttribute("slugBook", book);
-        model.addAttribute("buttonBookCartedName", "Купить");
-        model.addAttribute("buttonBookPostponedName", "Отложить");
+//        model.addAttribute("buttonBookCartedName", "Купить");
+//        model.addAttribute("buttonBookPostponedName", "Отложить");
         Integer userId = userService.getCurrentUserId(bookShop);
         model.addAttribute("buttonBookCartedName", book2UserService.getBook2UserByUserIdBookIdAndStatus(userId, book.getId(), "CART") != null ? "В корзине" : "Купить");
         model.addAttribute("buttonBookPostponedName", book2UserService.getBook2UserByUserIdBookIdAndStatus(userId, book.getId(), "KEPT") != null ? "Отложена" : "Отложить");
+        model.addAttribute("notPaid", book2UserService.getBook2UserByUserIdBookIdAndStatus(userId, book.getId(), "PAID") == null);
         model.addAttribute("ratingList", bookService.getBookRatingTable(book.getId()));
         model.addAttribute("scoreCount", bookService.getCountBookScore(book.getId()));
         BookScore bookScore = bookService.getBookScoreByBookIdAndUserId(book.getId(), userId);

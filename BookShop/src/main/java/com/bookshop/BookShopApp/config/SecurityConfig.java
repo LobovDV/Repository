@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement()
                 .and().authorizeRequests()
-                       .antMatchers("/my","/profile").authenticated() //.hasRole("USER")  //.authenticated()
+                       .antMatchers("/my","/profile").authenticated()
                        .antMatchers("/**").permitAll()
                 .and().formLogin()
                       .loginPage("/signin")

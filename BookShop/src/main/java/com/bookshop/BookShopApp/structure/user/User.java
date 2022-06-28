@@ -45,6 +45,9 @@ public class User {
     @ApiModelProperty("login verification code")
     private String code;
 
+    @ApiModelProperty("login verification code expiration")
+    private LocalDateTime codeTime;
+
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     @ApiModelProperty("authorization roles")
     private String roles;
@@ -191,5 +194,13 @@ public class User {
 
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+    public LocalDateTime getCodeTime() {
+        return codeTime;
+    }
+
+    public void setCodeTime(LocalDateTime codeTime) {
+        this.codeTime = codeTime;
     }
 }

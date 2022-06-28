@@ -22,7 +22,7 @@ public interface BookScoreRepository extends JpaRepository<BookScore, Integer> {
 
     @Modifying
     @Query(value = "UPDATE book_score SET time = ?2, score = ?3 WHERE id = ?1 ", nativeQuery = true)
-    void updateBookScore(Integer scoreId, LocalDateTime time, short score);
+    void updateBookScore(Integer scoreId, LocalDateTime time, Integer score);
 
     @Query(value =  "SELECT avg(score) FROM book_score where book_id = ?1 group by book_id", nativeQuery = true)
     double getBookRating(Integer bookId);

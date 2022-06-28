@@ -6,13 +6,16 @@ import com.bookshop.BookShopApp.errors.EmptySearchException;
 import com.bookshop.BookShopApp.structure.author.Author;
 import com.bookshop.BookShopApp.structure.book.Book;
 import com.bookshop.BookShopApp.structure.tag.Tag;
+import com.bookshop.BookShopApp.structure.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 
@@ -25,16 +28,14 @@ public class MainPageController {
     private final AuthorService authorService;
     private final GenreService genreService;
     private final UserService userService;
-    private final UserRegister userRegister;
 
     @Autowired
-    public MainPageController(BookService bookService, TagService tagService, AuthorService authorService, GenreService genreService, UserService userService, UserRegister userRegister) {
+    public MainPageController(BookService bookService, TagService tagService, AuthorService authorService, GenreService genreService, UserService userService) {
         this.bookService = bookService;
         this.tagService = tagService;
         this.authorService = authorService;
         this.genreService = genreService;
         this.userService = userService;
-        this.userRegister = userRegister;
     }
 
     @ModelAttribute("recommendedBooks")
@@ -167,4 +168,6 @@ public class MainPageController {
         model.addAttribute("booksByAuthorId", pages.getContent());
         return "/authors/slug";
     }
+
+
 }

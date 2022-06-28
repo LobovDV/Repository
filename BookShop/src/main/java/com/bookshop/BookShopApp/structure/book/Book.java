@@ -5,7 +5,6 @@ import com.bookshop.BookShopApp.structure.book.file.BookFile;
 import com.bookshop.BookShopApp.structure.book.file.FileDownload;
 import com.bookshop.BookShopApp.structure.book.review.BookReview;
 import com.bookshop.BookShopApp.structure.book.review.BookScore;
-import com.bookshop.BookShopApp.structure.payments.BalanceTransaction;
 import com.bookshop.BookShopApp.structure.tag.Tag;
 import com.bookshop.BookShopApp.structure.genre.Genre;
 import com.bookshop.BookShopApp.structure.user.User;
@@ -83,10 +82,6 @@ public class Book {
     @JsonIgnore
     private List<BookReview> reviews;
 
-    @OneToMany(mappedBy = "transactionBook")
-    @JsonIgnore
-    private List<BalanceTransaction> transactions;
-
     @OneToMany(mappedBy = "fileBook")
     @JsonIgnore
     private List<FileDownload> files;
@@ -163,14 +158,6 @@ public class Book {
 
     public void setFiles(List<FileDownload> files) {
         this.files = files;
-    }
-
-    public List<BalanceTransaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<BalanceTransaction> transactions) {
-        this.transactions = transactions;
     }
 
     public short getRating() {

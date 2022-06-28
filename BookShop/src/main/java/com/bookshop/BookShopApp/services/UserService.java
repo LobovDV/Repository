@@ -1,15 +1,22 @@
 package com.bookshop.BookShopApp.services;
 
 import com.bookshop.BookShopApp.data.*;
+import com.bookshop.BookShopApp.structure.book.Book;
 import com.bookshop.BookShopApp.structure.enums.ContactType;
+import com.bookshop.BookShopApp.structure.payments.BalanceTransaction;
 import com.bookshop.BookShopApp.structure.user.User;
 import com.bookshop.BookShopApp.structure.user.UserContact;
 import com.bookshop.BookShopApp.util.AdditionalMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,10 +32,12 @@ public class UserService {
     private final MessageRepository messageRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRegister userRegister;
+    private final TransactionRepository transactionRepository;
 
-    public UserService(com.bookshop.BookShopApp.data.UserRepository userRepository, UserContactRepository userContactRepository, Book2UserRepository book2UserRepository, BookScoreRepository bookScoreRepository,
+    @Autowired
+    public UserService(UserRepository userRepository, UserContactRepository userContactRepository, Book2UserRepository book2UserRepository, BookScoreRepository bookScoreRepository,
                        BookReviewRepository bookReviewRepository, BookReviewLikeRepository bookReviewLikeRepository, MessageRepository messageRepository, PasswordEncoder passwordEncoder,
-                       UserRegister userRegister) {
+                       UserRegister userRegister, TransactionRepository transactionRepository) {
         this.userRepository = userRepository;
         this.userContactRepository = userContactRepository;
         this.book2UserRepository = book2UserRepository;
@@ -38,6 +47,7 @@ public class UserService {
         this.messageRepository = messageRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRegister = userRegister;
+        this.transactionRepository = transactionRepository;
     }
 
     public User getUserById(Integer id) {
@@ -84,8 +94,8 @@ public class UserService {
         userContact.setUserId(userId);
         userContact.setContact(contact);
         userContact.setType(type);
-        userContact.setApproved((short) 1);
-        userContact.setCode(code);
+        userContact.setApproved((short) 0);
+        userContact.setCode(passwordEncoder.encode(code));
         userContact.setCodeTime(codeTime);
         userContact.setCodeTrails(0);
         userContactRepository.save(userContact);
@@ -100,11 +110,11 @@ public class UserService {
     }
 
     public void updateUserContactCodeAndTime(String code, LocalDateTime time, Integer code_trials, Integer contactId) {
-        userContactRepository.modifyUserContactCodeAndTime(code, time, code_trials, contactId);
+        userContactRepository.modifyUserContactCodeAndTime(passwordEncoder.encode(code), time, code_trials, contactId);
     }
 
-    public void updateUserLoginVerificationCode(String code, Integer userId) {
-        userRepository.modifyUserLoginVerificationCode(passwordEncoder.encode(code), userId);
+    public void updateUserLoginVerificationCode(String code, LocalDateTime code_time, Integer userId) {
+        userRepository.modifyUserLoginVerificationCode(passwordEncoder.encode(code), code_time, userId);
     }
 
     public void updateUserContactApproved(int approved, Integer contactId) {
@@ -139,5 +149,26 @@ public class UserService {
 
     public void removeUserContactByUserId(Integer userId) {
         userContactRepository.deleteUserContactByUserId(userId);
+    }
+
+    public void updateUserBalance(Integer balance, Integer userId) {
+        userRepository.modifyUserBalance(balance, userId);
+    }
+
+    public void updateUserName(String name, Integer userid) {
+        userRepository.modifyUserName(name, userid);
+    }
+
+    public void updateBook2UserUserId(Integer userId, Integer newUserId) {
+        book2UserRepository.modifyUserId(userId, newUserId);
+    }
+
+    public Page<BalanceTransaction> getPageOfTransactions(Integer userId, Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset,limit);
+        return transactionRepository.findTransactionsByUserIdDesc(userId, nextPage);
+    }
+
+    public void removeContactByUserIdAndType(Integer userId, int type) {
+        userContactRepository.deleteUserContactByUserIdAndType(userId, type);
     }
 }

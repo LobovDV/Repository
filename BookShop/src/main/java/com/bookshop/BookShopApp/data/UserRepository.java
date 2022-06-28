@@ -30,7 +30,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void modifyUserNameAndDateRegByUserId(String name, LocalDateTime req_time, Integer userId);
 
     @Modifying
-    @Query(value = "UPDATE users SET code = ?1 WHERE id = ?2 ", nativeQuery = true)
-    void modifyUserLoginVerificationCode(String code, Integer userId);
+    @Query(value = "UPDATE users SET code = ?1, code_time = ?2  WHERE id = ?3 ", nativeQuery = true)
+    void modifyUserLoginVerificationCode(String code, LocalDateTime code_time, Integer userId);
 
+    @Modifying
+    @Query(value = "UPDATE users SET balance = ?1 WHERE id = ?2 ", nativeQuery = true)
+    void modifyUserBalance(Integer balance, Integer userId);
+
+    @Modifying
+    @Query(value = "UPDATE users SET name = ?1 WHERE id = ?2 ", nativeQuery = true)
+    void modifyUserName(String name, Integer userId);
 }
